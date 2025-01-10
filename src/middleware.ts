@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(
         new URL("/dashboard/manager-view", request.nextUrl)
       );
-    } else if (role === "staff") {
+    } else if (role === "staff" || role === "delivery") {
       return NextResponse.redirect(
         new URL("/dashboard/pantry-view", request.nextUrl)
       );

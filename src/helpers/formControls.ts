@@ -213,5 +213,5 @@ export const addPatientFormElements = [
       { id: "staff2", label: "Staff 2" },
     ],
     placeholder: "Enter staff IDs (comma-separated)",
-  }  
+  },
 ];

@@ -67,7 +67,10 @@ const patientSchema = new mongoose.Schema({
   assignedStaff: {
     type: String,
   },
-  assignedDelivery: {
+  deliveryPerson: {
+    type: String,
+  },
+  deliveryStatus: {
     type: String,
   },
 });

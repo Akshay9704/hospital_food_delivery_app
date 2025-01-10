@@ -39,6 +39,8 @@ const initialFormData = {
   DietChartNightIngredients: "",
   DietChartNightInstructions: "",
   assignedStaff: "",
+  deliveryPerson: "",
+  deliveryStatus: "",
 };
 
 export default function ManagerDashboard() {
@@ -238,6 +240,18 @@ export default function ManagerDashboard() {
               Diet Chart Night Instructions:{" "}
               <span className="text-black">
                 {patient.DietChartNightInstructions}
+              </span>
+            </p>
+            <p className="text-gray-500">
+              Delivery Person:{" "}
+              <span className="text-white bg-black py-1 px-2 rounded-md">
+                {patient.deliveryPerson}
+              </span>
+            </p>
+            <p className="text-gray-500 mt-2">
+              Delivery Status:{" "}
+              <span className="text-white bg-black py-1 px-2 rounded-md">
+                {patient.deliveryStatus}
               </span>
             </p>
             <div className="flex gap-4 mt-4">

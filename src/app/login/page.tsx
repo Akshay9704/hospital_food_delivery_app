@@ -47,6 +47,7 @@ export default function LoginPage() {
         Cookies.set("token", res?.data?.token);
         localStorage.setItem("user", JSON.stringify(res?.data?.user));
         toast.success("Login successful!");
+        window.location.reload();
       }
     } catch (error) {
       console.error(error);
@@ -60,7 +61,7 @@ export default function LoginPage() {
   React.useEffect(() => {
     if (isAuthUser && userData?.role === "manager") {
       router.push("/dashboard/manager-view");
-    } else if (isAuthUser && userData?.role === "staff") {
+    } else if (isAuthUser && userData?.role === "staff" || userData?.role === "delivery") {
       router.push("/dashboard/pantry-view");
     }
   }, [isAuthUser]);
