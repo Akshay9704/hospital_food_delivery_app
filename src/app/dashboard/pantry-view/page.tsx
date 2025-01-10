@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import axios, { AxiosError } from "axios"; 
 import toast from "react-hot-toast";
@@ -145,7 +147,6 @@ export default function PantryDashboard() {
                 Patient Name:{" "}
                 <span className="text-black">{patient.patientName}</span>
               </h2>
-              {/* Display other patient details */}
               <div className="mt-4">
                 {showDelivery ? (
                   <p className="text-gray-500 text-sm">
