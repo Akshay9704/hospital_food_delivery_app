@@ -3,7 +3,6 @@
 import React from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import ManagerLayout from "@/components/manager-view/layout";
 import CommonForm from "@/components/common/form";
 import { Button } from "@/components/ui/button";
@@ -80,8 +79,6 @@ export default function ManagerDashboard() {
   const [searchQuery, setSearchQuery] = React.useState<string>("");
   const [isEditing, setIsEditing] = React.useState(false);
 
-  const router = useRouter();
-
   const fetchPatientList = async () => {
     try {
       const response = await axios.get("/api/patient");
@@ -140,10 +137,6 @@ export default function ManagerDashboard() {
     patient.patientName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const viewPatientDetails = (patientId: string) => {
-    router.push(`/view-patient-details?id=${patientId}`);
-  };
-
   return (
     <ManagerLayout>
       <div className="mb-5 w-full flex justify-end">
@@ -182,7 +175,8 @@ export default function ManagerDashboard() {
               <span className="text-black">{patient.roomNumber}</span>
             </p>
             <p className="text-gray-500">
-              Bed Number:{" "}<span className="text-black">{patient.bedNumber}</span>
+              Bed Number:{" "}
+              <span className="text-black">{patient.bedNumber}</span>
             </p>
             <p className="text-gray-500">
               Floor Number:{" "}
@@ -307,7 +301,9 @@ export default function ManagerDashboard() {
               onSubmit={onSubmit}
               formData={formData}
               setFormData={setFormData}
-              formElements={addPatientFormElements}
+              formControls={addPatientFormElements}
+              buttonText={isEditing ? "Update Patient" : "Add Patient"} 
+              isBtnDisabled={!formData.patientName || !formData.contact} 
             />
           </div>
         </SheetContent>

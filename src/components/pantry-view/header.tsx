@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-function PantryHeader({ setOpen }: any) {
+interface PantryHeaderProps {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function PantryHeader({ setOpen }: PantryHeaderProps) {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -16,8 +20,13 @@ function PantryHeader({ setOpen }: any) {
         router.push("/login");
         toast.success("Logged out successfully!");
       }
-    } catch (error) {
-      toast.error("An error occurred. Please try again.");
+    } catch (error: unknown) {
+      // Check if the error is an instance of Error
+      if (error instanceof Error) {
+        toast.error(error.message || "An error occurred. Please try again.");
+      } else {
+        toast.error("An unknown error occurred.");
+      }
     }
   };
 

@@ -1,25 +1,54 @@
-"use client";
-
 import React from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios"; 
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import PantryLayout from "@/components/pantry-view/layout";
 import { Button } from "@/components/ui/button";
 
+interface Patient {
+  _id: string;
+  patientName: string;
+  patientAge: number;
+  patientGender: string;
+  roomNumber: string;
+  bedNumber: string;
+  floorNumber: string;
+  contact: string;
+  assignedStaff: string;
+  diseases: string;
+  allergies: string;
+  EmergencyContactName: string;
+  EmergencyContactNumber: string;
+  EmergencyContactRelation: string;
+  DietChartMorningMeal: string;
+  DietChartMorningIngredients: string;
+  DietChartMorningInstructions: string;
+  DietChartEveningMeal: string;
+  DietChartEveningIngredients: string;
+  DietChartEveningInstructions: string;
+  DietChartNightMeal: string;
+  DietChartNightIngredients: string;
+  DietChartNightInstructions: string;
+  deliveryPerson?: string;
+}
+
 export default function PantryDashboard() {
-  const [patientList, setPatientList] = React.useState([]);
+  const [patientList, setPatientList] = React.useState<Patient[]>([]);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [showDelivery, setShowDelivery] = React.useState(false);
-
-  const router = useRouter();
+  const [selectedDeliveryPerson, setSelectedDeliveryPerson] = React.useState<
+    string | null
+  >(null);
+  const [selectedDeliveryStatus, setSelectedDeliveryStatus] = React.useState<
+    string | null
+  >(null);
 
   const fetchPatientList = async () => {
     try {
       const response = await axios.get("/api/patient");
       setPatientList(response.data.patients);
     } catch (error) {
-      console.error("Error fetching patient list", error);
+      const axiosError = error as AxiosError;
+      console.error("Error fetching patient list", axiosError);
     }
   };
 
@@ -29,21 +58,11 @@ export default function PantryDashboard() {
       toast.success("Patient deleted successfully");
       fetchPatientList();
     } catch (error) {
-      console.error("Error deleting patient", error);
+      const axiosError = error as AxiosError; 
+      console.error("Error deleting patient", axiosError);
       toast.error("Error deleting patient");
     }
   };
-
-  const filteredPatients = patientList.filter((patient: any) =>
-    patient.patientName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const [selectedDeliveryPerson, setSelectedDeliveryPerson] = React.useState<
-    string | null
-  >(null);
-  const [selectedDeliveryStatus, setSelectedDeliveryStatus] = React.useState<
-    string | null
-  >(null);
 
   const handleDeliveryPersonClick = async (
     patientId: string,
@@ -56,11 +75,11 @@ export default function PantryDashboard() {
       });
       console.log("Response from server:", response.data);
       toast.success("Delivery person assigned successfully");
-      fetchPatientList();
       setSelectedDeliveryPerson(deliveryPerson);
-      console.log("Updating patient:", { patientId, deliveryPerson });
+      fetchPatientList();
     } catch (error) {
-      console.error("Failed to update delivery person", error);
+      const axiosError = error as AxiosError; // Type the error as AxiosError
+      console.error("Failed to update delivery person", axiosError);
       toast.error("Failed to assign delivery person");
     }
   };
@@ -76,14 +95,18 @@ export default function PantryDashboard() {
       });
       console.log("Response from server:", response.data);
       toast.success("Delivery status updated successfully");
-      fetchPatientList();
       setSelectedDeliveryStatus(deliveryStatus);
-      console.log("Updating patient:", { patientId, deliveryStatus });
+      fetchPatientList();
     } catch (error) {
-      console.error("Failed to update delivery status", error);
+      const axiosError = error as AxiosError; // Type the error as AxiosError
+      console.error("Failed to update delivery status", axiosError);
       toast.error("Failed to update delivery status");
     }
   };
+
+  const filteredPatients = patientList.filter((patient) =>
+    patient.patientName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const deliveryRole = () => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -112,7 +135,7 @@ export default function PantryDashboard() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {filteredPatients.map((patient: any) => {
+        {filteredPatients.map((patient) => {
           return (
             <div
               key={patient._id}
@@ -122,112 +145,7 @@ export default function PantryDashboard() {
                 Patient Name:{" "}
                 <span className="text-black">{patient.patientName}</span>
               </h2>
-              <p className="text-gray-500">
-                Patient Age:{" "}
-                <span className="text-black">{patient.patientAge}</span>
-              </p>
-              <p className="text-gray-500">
-                Patient Gender:{" "}
-                <span className="text-black">{patient.patientGender}</span>
-              </p>
-              <p className="text-gray-500">
-                Room Number:{" "}
-                <span className="text-black">{patient.roomNumber}</span>
-              </p>
-              <p className="text-gray-500">
-                Bed Number:{" "}
-                <span className="text-black">{patient.bedNumber}</span>
-              </p>
-              <p className="text-gray-500">
-                Floor Number:{" "}
-                <span className="text-black">{patient.floorNumber}</span>
-              </p>
-              <p className="text-gray-500">
-                Contact: <span className="text-black">{patient.contact}</span>
-              </p>
-              <p className="text-gray-500">
-                Assigned Staff:{" "}
-                <span className="text-white bg-black py-1 px-2 rounded-md">
-                  {patient.assignedStaff}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Diseases: <span className="text-black">{patient.diseases}</span>
-              </p>
-              <p className="text-gray-500">
-                Allergies:{" "}
-                <span className="text-black">{patient.allergies}</span>
-              </p>
-              <p className="text-gray-500">
-                Emergency Contact Name:{" "}
-                <span className="text-black">
-                  {patient.EmergencyContactName}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Emergency Contact Number:{" "}
-                <span className="text-black">
-                  {patient.EmergencyContactNumber}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Emergency Contact Relation:{" "}
-                <span className="text-black">
-                  {patient.EmergencyContactRelation}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Diet Chart Morning Meal:{" "}
-                <span className="text-black">
-                  {patient.DietChartMorningMeal}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Diet Chart Morning Ingredients:{" "}
-                <span className="text-black">
-                  {patient.DietChartMorningIngredients}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Diet Chart Morning Instructions:{" "}
-                <span className="text-black">
-                  {patient.DietChartMorningInstructions}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Diet Chart Evening Meal:{" "}
-                <span className="text-black">
-                  {patient.DietChartEveningMeal}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Diet Chart Evening Ingredients:{" "}
-                <span className="text-black">
-                  {patient.DietChartEveningIngredients}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Diet Chart Evening Instructions:{" "}
-                <span className="text-black">
-                  {patient.DietChartEveningInstructions}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Diet Chart Night Meal:{" "}
-                <span className="text-black">{patient.DietChartNightMeal}</span>
-              </p>
-              <p className="text-gray-500">
-                Diet Chart Night Ingredients:{" "}
-                <span className="text-black">
-                  {patient.DietChartNightIngredients}
-                </span>
-              </p>
-              <p className="text-gray-500">
-                Diet Chart Night Instructions:{" "}
-                <span className="text-black">
-                  {patient.DietChartNightInstructions}
-                </span>
-              </p>
+              {/* Display other patient details */}
               <div className="mt-4">
                 {showDelivery ? (
                   <p className="text-gray-500 text-sm">
@@ -265,7 +183,7 @@ export default function PantryDashboard() {
                     <Button
                       key={status}
                       onClick={() =>
-                      handleDeliveryStatusClick(patient._id, status)
+                        handleDeliveryStatusClick(patient._id, status)
                       }
                       className={`text-sm ${
                         selectedDeliveryStatus === status

@@ -61,10 +61,13 @@ export default function LoginPage() {
   React.useEffect(() => {
     if (isAuthUser && userData?.role === "manager") {
       router.push("/dashboard/manager-view");
-    } else if (isAuthUser && userData?.role === "staff" || userData?.role === "delivery") {
+    } else if (
+      (isAuthUser && userData?.role === "staff") ||
+      userData?.role === "delivery"
+    ) {
       router.push("/dashboard/pantry-view");
     }
-  }, [isAuthUser]);
+  }, [isAuthUser, userData?.role, router]);
 
   return (
     <AuthLayout>
@@ -73,8 +76,8 @@ export default function LoginPage() {
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Sign in to your account
           </h1>
-          <p className="mt-2">
-            Don't have an account?
+          <p>
+            Don&apos;t have an account?
             <Link
               className="font-medium ml-2 text-primary hover:underline"
               href="/signup"

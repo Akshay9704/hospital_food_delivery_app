@@ -1,18 +1,17 @@
 import { Accessibility, ChartNoAxesCombined } from "lucide-react";
-
 import { Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 
-function MenuItems({ setOpen }: any) {
-  const router = useRouter();
+interface MenuItemsProps {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
+function MenuItems({ setOpen }: MenuItemsProps) {
   return (
     <nav className="mt-8 flex-col flex gap-2">
       <div
-        onClick={() => {
-          setOpen ? setOpen(false) : null;
-        }}
+        onClick={() => setOpen(false)}
         className="flex cursor-pointer text-xl items-center gap-2 rounded-md px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground"
       >
         <Accessibility />
@@ -22,7 +21,12 @@ function MenuItems({ setOpen }: any) {
   );
 }
 
-function AdminSideBar({ open, setOpen }: any) {
+interface AdminSideBarProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function AdminSideBar({ open, setOpen }: AdminSideBarProps) {
   const router = useRouter();
 
   return (
@@ -48,7 +52,7 @@ function AdminSideBar({ open, setOpen }: any) {
           <ChartNoAxesCombined size={30} />
           <h1 className="text-2xl font-extrabold">Admin Panel</h1>
         </div>
-        <MenuItems />
+        <MenuItems setOpen={setOpen} />
       </aside>
     </Fragment>
   );

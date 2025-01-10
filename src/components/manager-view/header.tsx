@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-function AdminHeader({ setOpen }: any) {
+interface AdminHeaderProps {
+  setOpen: (open: boolean) => void; 
+}
+
+function AdminHeader({ setOpen }: AdminHeaderProps) {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -17,6 +21,7 @@ function AdminHeader({ setOpen }: any) {
         toast.success("Logged out successfully!");
       }
     } catch (error) {
+      console.error("Logout error:", error);
       toast.error("An error occurred. Please try again.");
     }
   };

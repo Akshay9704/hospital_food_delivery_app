@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios, { AxiosError } from "axios"; // Import AxiosError for more specific error handling
 import toast from "react-hot-toast";
 import CommonForm from "@/components/common/form";
 import { registerFormControls } from "@/helpers/formControls";
@@ -21,7 +21,6 @@ export default function SignupPage() {
   console.log(user);
 
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     const { username, email, password } = user;
@@ -30,22 +29,20 @@ export default function SignupPage() {
     } else {
       setButtonDisabled(true);
     }
-  }, [user.username, user.email, user.password]);
+  }, [user.username, user.email, user.password, user]);
 
-  const onSignup = async (e: any) => {
+  const onSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setButtonDisabled(true);
     try {
-      setLoading(true);
       const res = await axios.post("/api/users/signup", user);
       console.log(res.data);
       router.push("/login");
       toast.success("Signup successfully!");
     } catch (error) {
-      console.error(error);
+      const axiosError = error as AxiosError;  // Use AxiosError for better error handling
+      console.error(axiosError);
       toast.error("Signup failed!");
-    } finally {
-      setLoading(false);
     }
     setButtonDisabled(false);
   };

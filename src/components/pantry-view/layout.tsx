@@ -4,7 +4,11 @@ import PantrySideBar from "./sidebar";
 import PantryHeader from "./header";
 import { useState } from "react";
 
-function PantryLayout({children}: any) {
+interface PantryLayoutProps {
+  children: React.ReactNode;
+}
+
+function PantryLayout({ children }: PantryLayoutProps) {
   const [openSidebar, setOpenSidebar] = useState(false);
 
   return (
@@ -15,7 +19,7 @@ function PantryLayout({children}: any) {
         {/* pantry header */}
         <PantryHeader setOpen={setOpenSidebar} />
         <main className="flex-1 flex-col flex bg-muted/40 p-4 md:p-6">
-            {children}
+          {children}
         </main>
       </div>
     </div>
