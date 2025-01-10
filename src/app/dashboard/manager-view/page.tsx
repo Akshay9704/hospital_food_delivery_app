@@ -15,8 +15,37 @@ import {
 } from "@/components/ui/sheet";
 import { addPatientFormElements } from "@/helpers/formControls";
 
-const initialFormData = {
-  patientId: "",
+// Define the Patient type
+interface Patient {
+  _id: string;
+  patientName: string;
+  patientAge: string;
+  patientGender: string;
+  roomNumber: string;
+  bedNumber: string;
+  floorNumber: string;
+  contact: string;
+  assignedStaff: string;
+  diseases: string;
+  allergies: string;
+  EmergencyContactName: string;
+  EmergencyContactNumber: string;
+  EmergencyContactRelation: string;
+  DietChartMorningMeal: string;
+  DietChartMorningIngredients: string;
+  DietChartMorningInstructions: string;
+  DietChartEveningMeal: string;
+  DietChartEveningIngredients: string;
+  DietChartEveningInstructions: string;
+  DietChartNightMeal: string;
+  DietChartNightIngredients: string;
+  DietChartNightInstructions: string;
+  deliveryPerson: string;
+  deliveryStatus: string;
+}
+
+const initialFormData: Patient = {
+  _id: "",
   patientName: "",
   diseases: "",
   allergies: "",
@@ -44,11 +73,11 @@ const initialFormData = {
 };
 
 export default function ManagerDashboard() {
-  const [formData, setFormData] = React.useState(initialFormData);
+  const [formData, setFormData] = React.useState<Patient>(initialFormData);
   const [openCreateProductsDialog, setOpenCreateProductsDialog] =
     React.useState(false);
-  const [patientList, setPatientList] = React.useState([]);
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [patientList, setPatientList] = React.useState<Patient[]>([]);
+  const [searchQuery, setSearchQuery] = React.useState<string>("");
   const [isEditing, setIsEditing] = React.useState(false);
 
   const router = useRouter();
@@ -70,7 +99,7 @@ export default function ManagerDashboard() {
     e.preventDefault();
     try {
       if (isEditing) {
-        if (!formData.patientId) {
+        if (!formData._id) {
           toast.error("Patient ID is missing.");
           return;
         }
@@ -90,11 +119,8 @@ export default function ManagerDashboard() {
     }
   };
 
-  const editPatient = (patient: any) => {
-    setFormData({
-      patientId: patient._id,
-      ...patient,
-    });
+  const editPatient = (patient: Patient) => {
+    setFormData(patient);
     setIsEditing(true);
     setOpenCreateProductsDialog(true);
   };
@@ -110,7 +136,7 @@ export default function ManagerDashboard() {
     }
   };
 
-  const filteredPatients = patientList.filter((patient: any) =>
+  const filteredPatients = patientList.filter((patient: Patient) =>
     patient.patientName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -137,7 +163,7 @@ export default function ManagerDashboard() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {filteredPatients.map((patient: any) => (
+        {filteredPatients.map((patient: Patient) => (
           <div key={patient._id} className="bg-white p-4 rounded-md shadow-md">
             <h2 className="text-lg font-semibold text-gray-500">
               Patient Name:{" "}
@@ -156,8 +182,7 @@ export default function ManagerDashboard() {
               <span className="text-black">{patient.roomNumber}</span>
             </p>
             <p className="text-gray-500">
-              Bed Number:{" "}
-              <span className="text-black">{patient.bedNumber}</span>
+              Bed Number:{" "}<span className="text-black">{patient.bedNumber}</span>
             </p>
             <p className="text-gray-500">
               Floor Number:{" "}
@@ -282,8 +307,7 @@ export default function ManagerDashboard() {
               onSubmit={onSubmit}
               formData={formData}
               setFormData={setFormData}
-              buttonText={isEditing ? "Update Patient" : "Add Patient"}
-              formControls={addPatientFormElements}
+              formElements={addPatientFormElements}
             />
           </div>
         </SheetContent>

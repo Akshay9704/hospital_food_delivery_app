@@ -4,7 +4,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { Types } from "mongoose";
 
 // GET ALL PATIENTS
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     await connect();
     const patients = await Patient.find();
