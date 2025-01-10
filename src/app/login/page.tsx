@@ -90,6 +90,15 @@ export default function LoginPage() {
           buttonText={loading ? "Logging in..." : "Login"}
           isBtnDisabled={buttonDisabled}
         />
+        <div>
+          <h5 className="font-bold">Login Credentials:</h5>
+          <p>
+            Email: hospital_manager@xyz.com <br /> Email:
+            hospital_pantry@xyz.com <br />
+            Email: hospital_delivery@xyz.com <br />
+            Password: Password@2025
+          </p>
+        </div>
       </div>
     </AuthLayout>
   );
